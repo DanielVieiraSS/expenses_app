@@ -11,11 +11,26 @@ class Expenses extends StatefulWidget {
 }
 
 class _ExpensesState extends State<Expenses> {
+  void _openAddExpenseOverlay() {
+    showModalBottomSheet(
+        context: context, builder: (ctx) => const Text("Testando"));
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Expense> expenses = userExpenses;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Flutter expense tracker"),
+        backgroundColor: Colors.blue,
+        actions: [
+          IconButton(
+            onPressed: _openAddExpenseOverlay,
+            icon: const Icon(Icons.add),
+          )
+        ],
+      ),
       body: Column(
         children: [
           Expanded(
