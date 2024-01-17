@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:expenses_app/models/expense.dart';
 
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key});
@@ -10,19 +13,32 @@ class NewExpense extends StatefulWidget {
 class _NewExpenseState extends State<NewExpense> {
   final expenseTitleController = TextEditingController();
   final expenseAmountController = TextEditingController();
+  DateTime? selectedDate;
+  Categoria selectedCategory = Categoria.leisure;
 
-  void presentDatePicker() {
+  void presentDatePicker() async {
     final now = DateTime.now();
     final firstDate = DateTime(
       now.year - 1,
       now.month,
       now.day,
     );
-    showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       firstDate: firstDate,
       lastDate: now,
     );
+    setState(() {
+      selectedDate = pickedDate;
+    });
+  }
+
+  void submitExpenseData() {
+    final enteredAmount = double.tryParse(expenseAmountController.text);
+    final amountIsInvalid = enteredAmount == null || enteredAmount <= 0;
+    if (expenseTitleController.text.trim().isEmpty ||
+        amountIsInvalid ||
+        selectedDate == null) {}
   }
 
   @override
@@ -65,7 +81,11 @@ class _NewExpenseState extends State<NewExpense> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Selected Date"),
+                    Text(
+                      selectedDate == null
+                          ? "No date selected"
+                          : formatter.format(selectedDate!),
+                    ),
                     IconButton(
                       onPressed: presentDatePicker,
                       icon: const Icon(
@@ -77,15 +97,37 @@ class _NewExpenseState extends State<NewExpense> {
               )
             ],
           ),
+          const SizedBox(height: 16),
           Row(
             children: [
+              DropdownButton(
+                  value: selectedCategory,
+                  items: Categoria.values
+                      .map(
+                        (category) => DropdownMenuItem(
+                          value: category,
+                          child: Text(
+                            category.name.toUpperCase().toString(),
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value == null) {
+                        return;
+                      }
+                      selectedCategory = value;
+                    });
+                  }),
+              const Spacer(),
               TextButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   child: const Text("Cancel")),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: submitExpenseData,
                 child: const Text("Save Expense"),
               )
             ],

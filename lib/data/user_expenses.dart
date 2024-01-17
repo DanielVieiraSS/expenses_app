@@ -5,12 +5,12 @@ List<Expense> userExpenses = [
     title: "FlutterCourse",
     amount: 19.99,
     date: DateTime.now(),
-    category: Category.work,
+    category: Categoria.work,
   ),
   Expense(
     title: "Cinema",
     amount: 15.69,
     date: DateTime.now(),
-    category: Category.leisure,
+    category: Categoria.leisure,
   )
 ];
