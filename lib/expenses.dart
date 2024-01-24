@@ -28,6 +28,12 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
+  void removeExpense(Expense expense) {
+    setState(() {
+      userExpenses.remove(expense);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Expense> expenses = userExpenses;
@@ -47,6 +53,7 @@ class _ExpensesState extends State<Expenses> {
         children: [
           Expanded(
             child: ExpensesList(
+              onRemoveExpense: removeExpense,
               expenses: expenses,
             ),
           ),
